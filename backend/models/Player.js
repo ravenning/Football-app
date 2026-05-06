@@ -5,6 +5,10 @@ const playerSchema = new mongoose.Schema({
     type: String,
     required: true
   },
+  photoUrl: {
+    type: String,
+    default: ''
+  },
   position: {
     type: String,
     default: 'Position TBD'

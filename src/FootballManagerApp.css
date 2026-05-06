@@ -1,0 +1,1076 @@
+/* Football Manager App - CSS Classes */
+
+/* Layout & Flex */
+.fma-flex-col { display: flex; flex-direction: column; }
+.fma-flex-row { display: flex; flex-direction: row; }
+.fma-flex-between { display: flex; justify-content: space-between; align-items: center; }
+.fma-flex-center { display: flex; align-items: center; }
+.fma-flex-wrap { display: flex; flex-wrap: wrap; }
+.fma-gap-6 { gap: 6px; }
+.fma-gap-7 { gap: 7px; }
+.fma-gap-10 { gap: 10px; }
+.fma-gap-13 { gap: 13px; }
+.fma-gap-14 { gap: 14px; }
+
+/* Grid */
+.fma-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.fma-grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 14px; }
+.fma-span-2 { grid-column: span 2; }
+.fma-span-3 { grid-column: span 3; }
+
+/* Field Container */
+.fma-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.fma-field-label {
+  font-size: 0.72rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: #8a9e8d;
+}
+
+.fma-field-required {
+  display: inline-block;
+  width: 5px;
+  height: 5px;
+  background: #b5f033;
+  border-radius: 50%;
+  margin-left: 5px;
+  vertical-align: middle;
+  margin-bottom: 2px;
+}
+
+.fma-field-hint {
+  font-size: 0.68rem;
+  color: #8a9e8d;
+}
+
+/* Section Card */
+.fma-section-card {
+  background: #162018;
+  border: 1px solid rgba(181, 240, 51, 0.15);
+  border-radius: 16px;
+  padding: 32px;
+  margin-bottom: 20px;
+  position: relative;
+  overflow: hidden;
+}
+
+.fma-section-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, #b5f033, transparent);
+}
+
+.fma-section-tag {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.6rem;
+  text-transform: uppercase;
+  letter-spacing: 3px;
+  color: #b5f033;
+  margin-bottom: 4px;
+}
+
+.fma-section-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1.55rem;
+  letter-spacing: 1px;
+  margin-bottom: 24px;
+  color: #f5f5f0;
+}
+
+/* Divider */
+.fma-divider {
+  height: 1px;
+  background: rgba(181, 240, 51, 0.15);
+  margin: 22px 0;
+}
+
+/* Callout */
+.fma-callout {
+  background: rgba(181, 240, 51, 0.06);
+  border-left: 3px solid #b5f033;
+  border-radius: 0 8px 8px 0;
+  padding: 13px 16px;
+  margin-bottom: 22px;
+  font-size: 0.82rem;
+  color: #8a9e8d;
+  line-height: 1.6;
+}
+
+/* Mono Tag */
+.fma-mono-tag {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.6rem;
+  text-transform: uppercase;
+  letter-spacing: 3px;
+  color: #b5f033;
+  margin-bottom: 8px;
+}
+
+/* Day Pills */
+.fma-day-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+}
+
+.fma-day-pill {
+  padding: 6px 13px;
+  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: transparent;
+  color: #8a9e8d;
+  font-size: 0.77rem;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.fma-day-pill.active {
+  border-color: #b5f033;
+  background: rgba(181, 240, 51, 0.15);
+  color: #b5f033;
+}
+
+/* Player Card */
+.fma-player-card {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(181, 240, 51, 0.15);
+  border-radius: 10px;
+  padding: 13px 16px;
+  margin-bottom: 9px;
+}
+
+.fma-player-shirt {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1.35rem;
+  color: #b5f033;
+  min-width: 28px;
+  text-align: center;
+}
+
+.fma-player-info {
+  flex: 1;
+}
+
+.fma-player-name {
+  font-weight: 600;
+  font-size: 0.88rem;
+}
+
+.fma-player-details {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.58rem;
+  color: #8a9e8d;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.fma-player-badge {
+  padding: 3px 10px;
+  border-radius: 20px;
+  font-family: 'Space Mono', monospace;
+  font-size: 0.58rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.fma-player-badge.complete {
+  background: rgba(181, 240, 51, 0.15);
+  color: #b5f033;
+}
+
+.fma-player-badge.incomplete {
+  background: rgba(232, 53, 53, 0.15);
+  color: #e83535;
+}
+
+/* Player Form */
+.fma-player-form {
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(181, 240, 51, 0.15);
+  border-radius: 12px;
+  padding: 22px;
+  margin-bottom: 14px;
+}
+
+.fma-player-form-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 18px;
+}
+
+.fma-player-form-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1.15rem;
+  color: #b5f033;
+  letter-spacing: 1px;
+}
+
+.fma-player-form-close {
+  background: none;
+  border: none;
+  color: #8a9e8d;
+  cursor: pointer;
+  font-size: 1.1rem;
+  padding: 0;
+}
+
+/* Buttons */
+.fma-button-primary {
+  padding: 11px 26px;
+  background: #b5f033;
+  color: #0e1a12;
+  border: none;
+  border-radius: 8px;
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1rem;
+  letter-spacing: 2px;
+  cursor: pointer;
+  font-weight: 600;
+  text-transform: uppercase;
+  transition: all 0.2s;
+}
+
+.fma-button-primary:hover {
+  opacity: 0.9;
+  transform: translateY(-1px);
+}
+
+.fma-button-secondary {
+  padding: 11px 20px;
+  background: transparent;
+  color: #8a9e8d;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  font-family: 'Space Mono', monospace;
+  font-size: 0.68rem;
+  letter-spacing: 1px;
+  cursor: pointer;
+  text-transform: uppercase;
+  transition: all 0.2s;
+}
+
+.fma-button-secondary:hover {
+  border-color: #8a9e8d;
+}
+
+.fma-close-button {
+  background: none;
+  border: none;
+  color: #8a9e8d;
+  cursor: pointer;
+  font-size: 1.1rem;
+  padding: 0;
+  transition: color 0.2s;
+}
+
+.fma-close-button:hover {
+  color: #b5f033;
+}
+
+/* Day Pills Margin */
+.fma-day-pills-container {
+  margin-top: 6px;
+}
+
+/* Button Container */
+.fma-button-group {
+  display: flex;
+  gap: 10px;
+  margin-top: 18px;
+}
+
+/* Modal Base */
+.fma-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.fma-modal-content {
+  background: #0e1a12;
+  border: 1px solid rgba(181, 240, 51, 0.2);
+  border-radius: 12px;
+  padding: 28px;
+  max-width: 600px;
+  width: 90%;
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+.fma-modal-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1.3rem;
+  color: #b5f033;
+  letter-spacing: 1px;
+  margin-bottom: 20px;
+}
+
+/* Search Input */
+.fma-search-input {
+  width: 100%;
+  padding: 11px 13px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  color: #f5f5f0;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.88rem;
+  outline: none;
+  transition: border-color 0.2s, background 0.2s;
+  margin-bottom: 14px;
+}
+
+.fma-search-input:focus {
+  border-color: #b5f033;
+  background: rgba(181, 240, 51, 0.05);
+}
+
+/* User List */
+.fma-user-list {
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+.fma-user-item {
+  padding: 12px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  cursor: pointer;
+  transition: background 0.2s;
+  font-size: 0.88rem;
+}
+
+.fma-user-item:hover {
+  background: rgba(181, 240, 51, 0.05);
+}
+
+/* Success Message */
+.fma-success-message {
+  background: rgba(181, 240, 51, 0.15);
+  border: 1px solid #b5f033;
+  border-radius: 8px;
+  padding: 14px 16px;
+  color: #b5f033;
+  font-size: 0.88rem;
+  margin-bottom: 14px;
+}
+
+/* Error Message */
+.fma-error-message {
+  background: rgba(232, 53, 53, 0.15);
+  border: 1px solid #e83535;
+  border-radius: 8px;
+  padding: 14px 16px;
+  color: #e83535;
+  font-size: 0.88rem;
+  margin-bottom: 14px;
+}
+
+/* Modal Base */
+.fma-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 20px;
+}
+
+.fma-modal-overlay.lime {
+  --border-color: #b5f033;
+  --bar-color: #b5f033;
+}
+
+.fma-modal-overlay.red {
+  --border-color: #e83535;
+  --bar-color: #e83535;
+}
+
+.fma-modal-content {
+  background: #162018;
+  border: 2px solid var(--border-color, #b5f033);
+  border-radius: 16px;
+  padding: 32px;
+  max-width: 600px;
+  width: 100%;
+  max-height: 80vh;
+  overflow-y: auto;
+  position: relative;
+}
+
+.fma-modal-content::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: var(--bar-color, #b5f033);
+}
+
+.fma-modal-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 2rem;
+  color: #b5f033;
+  letter-spacing: 2px;
+  margin-bottom: 16px;
+  text-align: center;
+}
+
+.fma-modal-info {
+  background: rgba(181, 240, 51, 0.1);
+  border: 1px solid #b5f033;
+  border-radius: 8px;
+  padding: 16px;
+  margin-bottom: 24px;
+}
+
+.fma-modal-info p {
+  color: #8a9e8d;
+  font-size: 0.88rem;
+  line-height: 1.5;
+  text-align: center;
+  margin: 0;
+}
+
+.fma-modal-info p:first-child {
+  color: #b5f033;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+.fma-modal-section {
+  margin-bottom: 24px;
+}
+
+.fma-modal-label {
+  display: block;
+  font-size: 0.72rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: #8a9e8d;
+  margin-bottom: 8px;
+}
+
+.fma-modal-input {
+  width: 100%;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  padding: 11px 13px;
+  color: #f5f5f0;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.88rem;
+  outline: none;
+  transition: border-color 0.2s, background 0.2s;
+}
+
+.fma-modal-input:focus {
+  border-color: #b5f033;
+  background: rgba(181, 240, 51, 0.05);
+}
+
+.fma-modal-search-group {
+  display: flex;
+  gap: 10px;
+}
+
+.fma-modal-search-input {
+  flex: 1;
+}
+
+.fma-retire-modal-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 2rem;
+  color: #e83535;
+  letter-spacing: 2px;
+  margin-bottom: 16px;
+  text-align: center;
+}
+
+.fma-retire-modal-warning {
+  background: rgba(232, 53, 53, 0.1);
+  border: 1px solid #e83535;
+  border-radius: 8px;
+  padding: 16px;
+  margin-bottom: 24px;
+}
+
+.fma-retire-modal-warning p {
+  color: #8a9e8d;
+  font-size: 0.88rem;
+  line-height: 1.5;
+  text-align: center;
+  margin: 0;
+}
+
+.fma-retire-modal-warning p:first-child {
+  color: #e83535;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+.fma-retire-modal-notice {
+  background: rgba(232, 53, 53, 0.15);
+  border-left: 3px solid #e83535;
+  border-radius: 0 8px 8px 0;
+  padding: 13px 16px;
+  margin-bottom: 24px;
+  font-size: 0.82rem;
+  color: #e83535;
+  line-height: 1.6;
+}
+
+.fma-retire-modal-input {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  padding: 11px 13px;
+  color: #f5f5f0;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.88rem;
+  width: 100%;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.fma-retire-modal-input.retire-confirm {
+  border-color: #e83535;
+}
+
+.fma-retire-modal-buttons {
+  display: flex;
+  gap: 10px;
+}
+
+.fma-retire-modal-button {
+  padding: 12px 20px;
+  border: none;
+  border-radius: 8px;
+  font-family: 'Space Mono', monospace;
+  font-size: 0.7rem;
+  letter-spacing: 1;
+  cursor: pointer;
+  text-transform: uppercase;
+}
+
+.fma-retire-modal-button.retire {
+  flex: 1;
+  background: #e83535;
+  color: #f5f5f0;
+}
+
+.fma-retire-modal-button.retire:disabled {
+  background: rgba(232, 53, 53, 0.3);
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+.fma-retire-modal-button.appoint {
+  width: 100%;
+  background: #b5f033;
+  color: #0a0b0a;
+  margin-bottom: 24px;
+}
+
+.fma-retire-modal-button.cancel {
+  background: transparent;
+  color: #8a9e8d;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.fma-retire-modal-button.cancel:disabled {
+  cursor: not-allowed;
+}
+
+.fma-retirement-error {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background: rgba(232, 53, 53, 0.9);
+  color: #f5f5f0;
+  padding: 12px 16px;
+  border-radius: 8px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.88rem;
+  z-index: 1001;
+}
+
+.fma-submitted-screen {
+  background: #0a0b0a;
+  min-height: 100vh;
+  font-family: 'DM Sans', sans-serif;
+  color: #f5f5f0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 32px;
+}
+
+.fma-submitted-content {
+  text-align: center;
+}
+
+.fma-submitted-logo {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 5rem;
+  color: #b5f033;
+  letter-spacing: 4px;
+}
+
+.fma-submitted-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 3rem;
+  letter-spacing: 3px;
+  margin-bottom: 12px;
+}
+
+.fma-submitted-title span {
+  color: #b5f033;
+}
+
+.fma-submitted-description {
+  color: #8a9e8d;
+  margin-bottom: 28px;
+  max-width: 400px;
+}
+
+.fma-submitted-description strong {
+  color: #f5f5f0;
+}
+
+.fma-submitted-badge {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.7rem;
+  color: #b5f033;
+  letter-spacing: 2px;
+  background: rgba(181, 240, 51, 0.08);
+  padding: 8px 20px;
+  border-radius: 20px;
+  display: inline-block;
+}
+
+.fma-submitted-button {
+  padding: 12px 28px;
+  background: transparent;
+  color: #8a9e8d;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  font-family: 'Space Mono', monospace;
+  font-size: 0.7rem;
+  letter-spacing: 1px;
+  cursor: pointer;
+  text-transform: uppercase;
+}
+
+.fma-add-player-button {
+  width: 100%;
+  padding: 13px;
+  border: 2px dashed rgba(181, 240, 51, 0.3);
+  border-radius: 10px;
+  background: transparent;
+  color: #b5f033;
+  font-family: 'Space Mono', monospace;
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.fma-main-app {
+  background: #0a0b0a;
+  min-height: 100vh;
+  font-family: 'DM Sans', sans-serif;
+  color: #f5f5f0;
+  position: relative;
+}
+
+.fma-background-pattern {
+  position: fixed;
+  inset: 0;
+  background-image: repeating-linear-gradient(90deg, transparent, transparent 79px, rgba(255,255,255,0.013) 79px, rgba(255,255,255,0.013) 80px);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.fma-header {
+  background: #1a4d1a;
+  padding: 13px 36px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  border-bottom: 3px solid #b5f033;
+  position: relative;
+  z-index: 10;
+}
+
+.fma-header-logo {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1.9rem;
+  letter-spacing: 3px;
+  color: #b5f033;
+}
+
+.fma-header-logo span {
+  color: #f5f5f0;
+}
+
+.fma-header-subtitle {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.6rem;
+  color: rgba(255, 255, 255, 0.45);
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  margin-left: auto;
+}
+
+.fma-main-content {
+  max-width: 940px;
+  margin: 0 auto;
+  padding: 44px 22px 80px;
+  position: relative;
+  z-index: 1;
+}
+
+.fma-main-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(2.2rem, 5vw, 4rem);
+  line-height: 0.9;
+  letter-spacing: 2px;
+  margin-bottom: 8px;
+}
+
+.fma-main-title span {
+  color: #b5f033;
+}
+
+.fma-main-description {
+  color: #8a9e8d;
+  font-size: 0.88rem;
+  margin-bottom: 40px;
+  font-weight: 300;
+}
+
+.fma-main-description span {
+  color: #b5f033;
+}
+
+.fma-tabs {
+  display: flex;
+  gap: 4px;
+  margin-bottom: 28px;
+  background: #162018;
+  padding: 4px;
+  border-radius: 10px;
+  border: 1px solid #2a2d2a;
+  width: fit-content;
+}
+
+.fma-modal-search-btn {
+  padding: 11px 20px;
+  background: #b5f033;
+  color: #0e1a12;
+  border: none;
+  border-radius: 8px;
+  font-family: 'Space Mono', monospace;
+  font-size: 0.7rem;
+  letter-spacing: 1px;
+  cursor: pointer;
+  text-transform: uppercase;
+}
+
+/* Search Results */
+.fma-search-results {
+  margin-bottom: 24px;
+}
+
+.fma-search-results-title {
+  font-size: 0.72rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: #8a9e8d;
+  margin-bottom: 12px;
+}
+
+.fma-search-results-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.fma-search-result-item {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  padding: 12px 16px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.fma-search-result-item:hover {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+.fma-search-result-item.selected {
+  background: rgba(181, 240, 51, 0.15);
+  border-color: #b5f033;
+}
+
+.fma-search-result-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.fma-search-result-name {
+  font-weight: 600;
+  font-size: 0.88rem;
+  margin-bottom: 4px;
+}
+
+.fma-search-result-meta {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.58rem;
+  color: #8a9e8d;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.fma-search-result-badge {
+  padding: 4px 8px;
+  border-radius: 12px;
+  background: #b5f033;
+  color: #0e1a12;
+  font-family: 'Space Mono', monospace;
+  font-size: 0.58rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+/* Error Message Styles */
+.fma-error-box {
+  background: rgba(232, 53, 53, 0.15);
+  border-left: 3px solid #e83535;
+  border-radius: 0 8px 8px 0;
+  padding: 13px 16px;
+  margin-bottom: 24px;
+  font-size: 0.82rem;
+  color: #e83535;
+  line-height: 1.6;
+}
+
+/* Modal Buttons */
+.fma-modal-buttons {
+  display: flex;
+  gap: 10px;
+}
+
+.fma-modal-button {
+  flex: 1;
+  padding: 12px 20px;
+  background: #b5f033;
+  color: #0e1a12;
+  border: none;
+  border-radius: 8px;
+  font-family: 'Space Mono', monospace;
+  font-size: 0.7rem;
+  letter-spacing: 1px;
+  cursor: pointer;
+  text-transform: uppercase;
+  transition: all 0.2s;
+}
+
+.fma-modal-button:disabled {
+  background: rgba(181, 240, 51, 0.3);
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+.fma-modal-button.secondary {
+  flex: 1;
+  background: transparent;
+  color: #8a9e8d;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.fma-modal-button.secondary:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+/* Login Screen */
+.fma-login-screen {
+  background: #0e1a12;
+  min-height: 100vh;
+  font-family: 'DM Sans', sans-serif;
+  color: #f5f5f0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 32px;
+}
+
+.fma-login-container {
+  text-align: center;
+  max-width: 400px;
+}
+
+.fma-login-logo {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 4rem;
+  color: #b5f033;
+  letter-spacing: 4px;
+  margin-bottom: 24px;
+}
+
+.fma-login-logo-white {
+  color: #f5f5f0;
+}
+
+.fma-login-message {
+  background: rgba(181, 240, 51, 0.1);
+  border: 1px solid #b5f033;
+  border-radius: 8px;
+  padding: 16px;
+  margin-bottom: 32px;
+}
+
+.fma-login-message p {
+  color: #b5f033;
+  font-weight: 600;
+  font-size: 0.88rem;
+  line-height: 1.5;
+  margin: 0;
+}
+
+.fma-login-form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-bottom: 32px;
+}
+
+.fma-login-field {
+  text-align: left;
+}
+
+.fma-login-label {
+  display: block;
+  font-size: 0.72rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: #8a9e8d;
+  margin-bottom: 8px;
+}
+
+.fma-login-input {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  padding: 11px 13px;
+  color: #f5f5f0;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.88rem;
+  width: 100%;
+  outline: none;
+  transition: border-color 0.2s, background 0.2s;
+}
+
+.fma-login-input:focus {
+  border-color: #b5f033;
+  background: rgba(181, 240, 51, 0.05);
+}
+
+.fma-login-button {
+  width: 100%;
+  padding: 13px 20px;
+  background: #b5f033;
+  color: #0e1a12;
+  border: none;
+  border-radius: 8px;
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1.05rem;
+  letter-spacing: 2px;
+  cursor: pointer;
+  text-transform: uppercase;
+  margin-bottom: 16px;
+  transition: all 0.2s;
+}
+
+.fma-login-button:hover {
+  opacity: 0.9;
+  transform: translateY(-1px);
+}
+
+.fma-login-button.secondary {
+  background: transparent;
+  color: #8a9e8d;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Retire Modal Specific */
+.fma-modal-confirmation {
+  margin-bottom: 24px;
+}
+
+.fma-modal-confirmation-label {
+  display: block;
+  font-size: 0.72rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: #8a9e8d;
+  margin-bottom: 8px;
+}
+
+.fma-modal-confirmation-input {
+  width: 100%;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  padding: 11px 13px;
+  color: #f5f5f0;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.88rem;
+  outline: none;
+  transition: border-color 0.2s, background 0.2s;
+}
+
+.fma-modal-confirmation-input:focus {
+  border-color: #b5f033;
+  background: rgba(181, 240, 51, 0.05);
+}
+
+/* Utility Classes */
+.fma-mb-18 { margin-bottom: 18px; }
+.fma-mb-20 { margin-bottom: 20px; }
+.fma-mb-22 { margin-bottom: 22px; }
+.fma-mb-24 { margin-bottom: 24px; }
+.fma-mb-32 { margin-bottom: 32px; }
+.fma-mt-6 { margin-top: 6px; }
+.fma-mt-18 { margin-top: 18px; }
+

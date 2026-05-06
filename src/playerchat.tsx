@@ -12,14 +12,12 @@ interface PlayerChatProps {
 interface MessageBubbleProps {
   message: DirectMessage;
   isCurrentUser: boolean;
-  currentUserRole: 'manager' | 'player';
   playerName?: string;
 }
 
 const MessageBubble: React.FC<MessageBubbleProps> = ({ 
   message, 
   isCurrentUser, 
-  currentUserRole,
   playerName 
 }) => {
   const lines = message.body.split('\n');

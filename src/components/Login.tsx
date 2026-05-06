@@ -14,7 +14,7 @@ export default function Login({ onSwitchToRegister }: LoginProps) {
     e.preventDefault();
     try {
       await login(email, password);
-    } catch (err) {
+    } catch {
       // Error is handled in the store
     }
   };

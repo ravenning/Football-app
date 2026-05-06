@@ -23,7 +23,7 @@ export default function Register({ onSwitchToLogin }: RegisterProps) {
 
     try {
       await register(name, email, password);
-    } catch (err) {
+    } catch {
       // Error is handled in the store
     }
   };

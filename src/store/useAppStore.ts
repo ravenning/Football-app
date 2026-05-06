@@ -1,4 +1,5 @@
 import { create } from 'zustand';
+import { io } from 'socket.io-client';
 
 interface Player {
   _id: string;
@@ -7,6 +8,7 @@ interface Player {
   status: 'Available' | 'Injured' | 'Absent';
   age?: number;
   userId: string;
+  photoUrl?: string;
   createdAt: string;
   updatedAt: string;
 }
@@ -25,11 +27,28 @@ interface User {
   email: string;
 }
 
+interface NewPlayerInput {
+  name: string;
+  position?: string;
+  status?: 'Available' | 'Injured' | 'Absent';
+  age?: number;
+  photoFile?: File | null;
+}
+
+interface ScoreUpdate {
+  matchId: string;
+  homeScore: number;
+  awayScore: number;
+  description: string;
+  timestamp: string;
+}
+
 interface AuthState {
   user: User | null;
   token: string | null;
   isAuthenticated: boolean;
   isLoading: boolean;
+  isFetchingPlayers: boolean;
   error: string | null;
 }
 
@@ -46,17 +65,22 @@ interface AppStore extends AuthState {
 
   // Player actions
   fetchPlayers: () => Promise<void>;
-  addPlayer: (player: Omit<Player, '_id' | 'userId' | 'createdAt' | 'updatedAt'>) => Promise<void>;
+  addPlayer: (player: NewPlayerInput) => Promise<Player>;
   updatePlayer: (id: string, data: Partial<Pick<Player, 'name' | 'position' | 'status' | 'age'>>) => Promise<void>;
   deletePlayer: (id: string) => Promise<void>;
+  uploadPlayerPhoto: (id: string, file: File) => Promise<Player>;
+  sendLiveScoreUpdate: (payload: Omit<ScoreUpdate, 'timestamp'>) => Promise<void>;
+  liveScore: ScoreUpdate | null;
+  socketConnected: boolean;
 
   // Message actions (keeping local for now)
   setActiveChat: (id: string) => void;
   sendMessage: (text: string) => void;
 }
 
-// API base URL
-const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+const BACKEND_BASE = import.meta.env.VITE_API_URL?.replace(/\/api\/?$/, '') || 'http://localhost:5000';
+const API_BASE = `${BACKEND_BASE}/api`;
+const socket = typeof window !== 'undefined' ? io(BACKEND_BASE, { transports: ['websocket'] }) : null;
 
 // Helper function to get auth headers
 const getAuthHeaders = (token?: string) => {
@@ -76,6 +100,7 @@ const loadAuthState = (): AuthState => {
         token,
         isAuthenticated: true,
         isLoading: false,
+        isFetchingPlayers: false,
         error: null,
       };
     } catch {
@@ -89,17 +114,35 @@ const loadAuthState = (): AuthState => {
     token: null,
     isAuthenticated: false,
     isLoading: false,
+    isFetchingPlayers: false,
     error: null,
   };
 };
 
-export const useAppStore = create<AppStore>((set, get) => ({
-  ...loadAuthState(),
-  players: [],
-  messages: JSON.parse(localStorage.getItem('messages') || '[]'),
-  activePlayerChat: null,
+export const useAppStore = create<AppStore>((set, get) => {
+  if (socket) {
+    socket.on('connect', () => set({ socketConnected: true }));
+    socket.on('disconnect', () => set({ socketConnected: false }));
+    socket.on('playerAdded', (player: Player) => set((state) => {
+      if (state.players.some((p) => p._id === player._id)) {
+        return state;
+      }
+      return { players: [...state.players, player] };
+    }));
+    socket.on('playerUpdated', (player: Player) => set((state) => ({ players: state.players.map((p) => p._id === player._id ? player : p) })));
+    socket.on('playerDeleted', (playerId: string) => set((state) => ({ players: state.players.filter((p) => p._id !== playerId) })));
+    socket.on('scoreUpdate', (payload: ScoreUpdate) => set({ liveScore: payload }));
+  }
 
-  // Authentication actions
+  return {
+    ...loadAuthState(),
+    players: [],
+    messages: JSON.parse(localStorage.getItem('messages') || '[]'),
+    activePlayerChat: null,
+    liveScore: null,
+    socketConnected: Boolean(socket?.connected),
+
+    // Authentication actions
   login: async (email: string, password: string) => {
     set({ isLoading: true, error: null });
 
@@ -191,6 +234,8 @@ export const useAppStore = create<AppStore>((set, get) => ({
       user: null,
       token: null,
       isAuthenticated: false,
+      isLoading: false,
+      isFetchingPlayers: false,
       players: [],
       messages: [],
       activePlayerChat: null,
@@ -212,6 +257,8 @@ export const useAppStore = create<AppStore>((set, get) => ({
     const { token } = get();
     if (!token) return;
 
+    set({ isFetchingPlayers: true, error: null });
+
     try {
       const response = await fetch(`${API_BASE}/players`, {
         headers: getAuthHeaders(token),
@@ -226,16 +273,21 @@ export const useAppStore = create<AppStore>((set, get) => ({
       }
 
       const players = await response.json();
-      set({ players });
+      set({ players, isFetchingPlayers: false });
     } catch (error) {
       console.error('Error fetching players:', error);
-      set({ error: error instanceof Error ? error.message : 'Failed to fetch players' });
+      set({
+        error: error instanceof Error ? error.message : 'Failed to fetch players',
+        isFetchingPlayers: false,
+      });
     }
   },
 
   addPlayer: async (playerData) => {
     const { token } = get();
     if (!token) throw new Error('Not authenticated');
+
+    const { photoFile, ...payload } = playerData as NewPlayerInput;
 
     try {
       const response = await fetch(`${API_BASE}/players`, {
@@ -244,18 +296,23 @@ export const useAppStore = create<AppStore>((set, get) => ({
           'Content-Type': 'application/json',
           ...getAuthHeaders(token),
         },
-        body: JSON.stringify(playerData),
+        body: JSON.stringify(payload),
       });
 
       if (!response.ok) {
         throw new Error('Failed to add player');
       }
 
-      const newPlayer = await response.json();
+      let newPlayer = await response.json();
+
+      if (photoFile) {
+        newPlayer = await get().uploadPlayerPhoto(newPlayer._id, photoFile);
+      }
 
       set((state) => ({
         players: [...state.players, newPlayer],
       }));
+      return newPlayer;
     } catch (error) {
       console.error('Error adding player:', error);
       throw error;
@@ -316,6 +373,48 @@ export const useAppStore = create<AppStore>((set, get) => ({
     }
   },
 
+  uploadPlayerPhoto: async (id, file) => {
+    const { token } = get();
+    if (!token) throw new Error('Not authenticated');
+
+    const formData = new FormData();
+    formData.append('photo', file);
+
+    const response = await fetch(`${API_BASE}/players/${id}/photo`, {
+      method: 'POST',
+      headers: getAuthHeaders(token),
+      body: formData,
+    });
+
+    if (!response.ok) {
+      throw new Error('Failed to upload player photo');
+    }
+
+    const updatedPlayer = await response.json();
+    set((state) => ({
+      players: state.players.map((p) => p._id === updatedPlayer._id ? updatedPlayer : p),
+    }));
+    return updatedPlayer;
+  },
+
+  sendLiveScoreUpdate: async (payload) => {
+    const { token } = get();
+    if (!token) throw new Error('Not authenticated');
+
+    const response = await fetch(`${API_BASE}/live-score`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        ...getAuthHeaders(token),
+      },
+      body: JSON.stringify(payload),
+    });
+
+    if (!response.ok) {
+      throw new Error('Failed to send score update');
+    }
+  },
+
   // Message actions (keeping local storage for now)
   setActiveChat: (id) => set({ activePlayerChat: id }),
 
@@ -328,7 +427,7 @@ export const useAppStore = create<AppStore>((set, get) => ({
       playerId: activePlayerChat,
       text: text.trim(),
       time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-      sender: 'coach' as const,
+      sender: 'coach',
     };
 
     set((state) => ({

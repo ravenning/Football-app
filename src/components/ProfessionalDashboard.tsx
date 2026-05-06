@@ -1,6 +1,7 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useAppStore } from '../store/useAppStore';
 import Messages from '../pages/Messages';
+import './ProfessionalDashboard.css';
 
 export default function ProfessionalDashboard() {
   const [activeTab, setActiveTab] = useState('dashboard');
@@ -9,10 +10,32 @@ export default function ProfessionalDashboard() {
     name: '',
     position: '',
     status: 'Available' as 'Available' | 'Injured' | 'Absent',
-    age: 0
+    age: 0,
+    photoFile: null as File | null,
   });
+  const [photoPreview, setPhotoPreview] = useState<string | null>(null);
+  const [isOnline, setIsOnline] = useState(typeof navigator !== 'undefined' ? navigator.onLine : true);
 
-  const { players, user, logout, addPlayer, isLoading } = useAppStore();
+  const { players, user, logout, addPlayer, isLoading, isFetchingPlayers, isAuthenticated, liveScore, socketConnected, sendLiveScoreUpdate } = useAppStore();
+
+  useEffect(() => {
+    const handleOnline = () => setIsOnline(true);
+    const handleOffline = () => setIsOnline(false);
+
+    window.addEventListener('online', handleOnline);
+    window.addEventListener('offline', handleOffline);
+
+    return () => {
+      window.removeEventListener('online', handleOnline);
+      window.removeEventListener('offline', handleOffline);
+    };
+  }, []);
+
+  useEffect(() => {
+    if (!isAuthenticated) {
+      logout();
+    }
+  }, [isAuthenticated, logout]);
 
   const available = players.filter((p) => p.status === "Available").length;
   const injured = players.filter((p) => p.status === "Injured").length;
@@ -29,21 +52,60 @@ export default function ProfessionalDashboard() {
     { title: "Absent", value: absent },
   ];
 
+  const skeletonStats = Array.from({ length: 4 }, (_, i) => (
+    <div key={i} className="stat-card skeleton-card">
+      <span className="skeleton-line short" />
+      <span className="skeleton-line long" />
+    </div>
+  ));
+
   const recentPlayers = players.slice(0, 5).map(player => ({
     id: player._id,
     name: player.name,
     position: player.position || "Position TBD",
-    status: player.status
+    status: player.status,
+    photoUrl: player.photoUrl || ''
   }));
+
+  const skeletonPlayers = Array.from({ length: 5 }, (_, i) => (
+    <div key={i} className="player-item skeleton-player">
+      <div className="player-info">
+        <div className="player-avatar skeleton-avatar" />
+        <div className="player-details">
+          <span className="skeleton-line short" />
+          <span className="skeleton-line long" />
+        </div>
+      </div>
+      <span className="player-status skeleton-pill" />
+    </div>
+  ));
 
   const handleAddPlayer = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
       await addPlayer(newPlayer);
-      setNewPlayer({ name: '', position: '', status: 'Available', age: 0 });
+      setNewPlayer({ name: '', position: '', status: 'Available', age: 0, photoFile: null });
+      setPhotoPreview(null);
       setShowAddPlayer(false);
     } catch (error) {
       console.error('Error adding player:', error);
+    }
+  };
+
+  const handlePhotoChange = (file: File | null) => {
+    setNewPlayer((prev) => ({ ...prev, photoFile: file }));
+    setPhotoPreview(file ? URL.createObjectURL(file) : null);
+  };
+
+  const handlePublishScore = async () => {
+    const home = Number(prompt('Home score', '1'));
+    const away = Number(prompt('Away score', '0'));
+    if (Number.isNaN(home) || Number.isNaN(away)) return;
+
+    try {
+      await sendLiveScoreUpdate({ matchId: 'live-match', homeScore: home, awayScore: away, description: `Live update: ${home}-${away}` });
+    } catch (error) {
+      console.error('Error publishing score update', error);
     }
   };
 
@@ -52,81 +114,50 @@ export default function ProfessionalDashboard() {
   }
 
   return (
-    <div style={{ minHeight: "100vh", background: "#eff6ff", color: "#0f172a" }}>
+    <div className="dashboard-container">
       {/* HEADER */}
-      <div style={{ background: "#dbeafe", borderBottom: "4px solid #93c5fd", padding: "16px 24px" }}>
-        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-          <div>
-            <h1 style={{ fontSize: "1.875rem", fontWeight: "bold", margin: 0 }}>Dashboard</h1>
-            <p style={{ color: "#475569", margin: "4px 0 0 0" }}>Overview of your football team</p>
+      <div className="header">
+        <div className="header-content">
+          <div className="header-title">
+            <h1>Dashboard</h1>
+            <p>Overview of your football team</p>
           </div>
-          <div style={{ display: "flex", alignItems: "center", gap: "16px" }}>
-            <div style={{ textAlign: "right" }}>
-              <div style={{ fontWeight: 600 }}>{user?.name || 'Manager'}</div>
-              <div style={{ fontSize: "0.875rem", color: "#d1d5db" }}>Manager · Riverside FC</div>
+          <div className="header-actions">
+            <div className="user-info">
+              <div className="user-name">{user?.name || 'Manager'}</div>
+              <div className="user-role">Manager · Riverside FC</div>
             </div>
             <button
               onClick={logout}
-              style={{
-                padding: "8px 16px",
-                background: "#eff6ff",
-                border: "1px solid rgba(37,99,235,0.2)",
-                borderRadius: "12px",
-                color: "#0f172a",
-                cursor: "pointer",
-                fontSize: "0.875rem",
-                transition: "background 0.2s"
-              }}
+              className="logout-btn"
             >
               Logout
             </button>
-            <div style={{
-              width: "48px",
-              height: "48px",
-              borderRadius: "50%",
-              background: "#2563eb",
-              color: "#ffffff",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              fontWeight: "bold"
-            }}>
+            <div className="avatar">
               {user?.name?.split(' ').map(n => n[0]).join('') || 'M'}
             </div>
           </div>
         </div>
       </div>
 
+      {!isOnline && (
+        <div className="offline-banner">
+          Offline mode enabled — you can still view cached data but new updates require a connection.
+        </div>
+      )}
+
       {/* NAVIGATION */}
-      <div style={{ background: "#ffffff", padding: "12px 24px", borderBottom: "1px solid #dbeafe" }}>
-        <div style={{ display: "flex", gap: "8px" }}>
+      <div className="navigation">
+        <div className="nav-tabs">
           <button
             onClick={() => setActiveTab('dashboard')}
-            style={{
-              padding: "8px 16px",
-              borderRadius: "8px",
-              fontWeight: 500,
-              background: activeTab === 'dashboard' ? "#2563eb" : "#eff6ff",
-              color: activeTab === 'dashboard' ? "#ffffff" : "#475569",
-              border: "none",
-              cursor: "pointer",
-              transition: "all 0.2s"
-            }}
+            className={`nav-btn ${activeTab === 'dashboard' ? 'active' : ''}`}
           >
             Dashboard
           </button>
           <button
             onClick={() => setActiveTab('messages')}
-            style={{
-              padding: "8px 16px",
-              borderRadius: "8px",
-              fontWeight: 500,
-              background: activeTab === 'messages' ? "#2563eb" : "#eff6ff",
-              color: activeTab === 'messages' ? "#ffffff" : "#475569",
-              border: "none",
-              cursor: "pointer",
-              transition: "all 0.2s"
-            }}
+            className={`nav-btn ${activeTab === 'messages' ? 'active' : ''}`}
           >
             Messages
           </button>
@@ -134,168 +165,105 @@ export default function ProfessionalDashboard() {
       </div>
 
       {/* MAIN CONTENT */}
-      <div style={{ padding: "32px 24px" }}>
-        <div style={{ maxWidth: "1024px", margin: "0 auto" }}>
+      <div className="main-content">
+        <div className="content-wrapper">
+
+          {/* LIVE SCORE */}
+          <div className="score-card">
+            <div className="score-card-heading">
+              <h2>Live Score</h2>
+              <span className={`status-pill ${socketConnected ? 'online' : 'offline'}`}>
+                {socketConnected ? 'Live updates active' : 'Socket disconnected'}
+              </span>
+            </div>
+            {liveScore ? (
+              <div className="score-body">
+                <div className="score-numbers">
+                  <span>{liveScore.homeScore}</span>
+                  <span>–</span>
+                  <span>{liveScore.awayScore}</span>
+                </div>
+                <p>{liveScore.description}</p>
+                <small>{new Date(liveScore.timestamp).toLocaleTimeString()}</small>
+              </div>
+            ) : (
+              <div className="score-body empty">
+                No live score updates yet. Use Publish Score Update to emit a new event.
+              </div>
+            )}
+            <button className="action-btn secondary" onClick={handlePublishScore}>
+              Publish Score Update
+            </button>
+          </div>
 
           {/* AVAILABILITY RATE */}
-          <div style={{ 
-            background: "#162018", 
-            border: "1px solid #374151", 
-            borderRadius: "16px", 
-            padding: "24px",
-            marginBottom: "32px"
-          }}>
-            <h2 style={{ fontSize: "1.25rem", fontWeight: 600, marginBottom: "16px", color: "#2563eb" }}>Team Availability</h2>
-            <div style={{ fontSize: "2.25rem", fontWeight: "bold", color: "#2563eb" }}>{availabilityRate}%</div>
-            <p style={{ color: "#64748b", marginTop: "8px" }}>Players available for next match</p>
+          <div className="availability-card">
+            <h2 className="availability-title">Team Availability</h2>
+            <div className="availability-rate">{availabilityRate}%</div>
+            <p className="availability-desc">Players available for next match</p>
           </div>
 
           {/* STATS CARDS */}
-          <div style={{ 
-            display: "grid", 
-            gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", 
-            gap: "24px",
-            marginBottom: "32px"
-          }}>
-            {stats.map((stat, i) => (
-              <div key={i} style={{ 
-                background: "#ffffff", 
-                border: "1px solid #dbeafe", 
-                borderRadius: "16px", 
-                padding: "24px",
-                transition: "border-color 0.2s"
-              }}>
-                <p style={{ color: "#9ca3af", fontSize: "0.875rem", fontWeight: 500, marginBottom: "8px" }}>{stat.title}</p>
-                <h2 style={{ fontSize: "1.875rem", fontWeight: "bold", color: "#2563eb", margin: 0 }}>{stat.value}</h2>
+          <div className="stats-grid">
+            {isFetchingPlayers ? skeletonStats : stats.map((stat, i) => (
+              <div key={i} className="stat-card">
+                <p className="stat-title">{stat.title}</p>
+                <h2 className="stat-value">{stat.value}</h2>
               </div>
             ))}
           </div>
 
           {/* PLAYER LIST */}
-          <div style={{ 
-            background: "#ffffff", 
-            border: "1px solid #dbeafe", 
-            borderRadius: "16px", 
-            padding: "24px",
-            marginBottom: "32px"
-          }}>
-            <h2 style={{ fontSize: "1.25rem", fontWeight: 600, marginBottom: "24px", color: "#2563eb" }}>Recent Players</h2>
+          <div className="players-card">
+            <h2 className="players-title">Recent Players</h2>
 
-            <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
-              {recentPlayers.map((player, i) => (
-                <div
-                  key={i}
-                  style={{
-                    display: "flex",
-                    justifyContent: "space-between",
-                    alignItems: "center",
-                    padding: "16px",
-                    background: "#eff6ff",
-                    borderRadius: "12px",
-                    cursor: "pointer",
-                    transition: "background 0.2s"
-                  }}
-                >
-                  <div style={{ display: "flex", alignItems: "center", gap: "16px" }}>
-                    <div style={{ 
-                      width: "40px", 
-                      height: "40px", 
-                      borderRadius: "50%", 
-                      background: "#b5f033", 
-                      color: "#000", 
-                      display: "flex", 
-                      alignItems: "center", 
-                      justifyContent: "center", 
-                      fontWeight: "bold" 
-                    }}>
-                      {player.name.split(' ').map(n => n[0]).join('')}
-                    </div>
-                    <div>
-                      <p style={{ fontWeight: 500, margin: 0 }}>{player.name}</p>
-                      <span style={{ fontSize: "0.875rem", color: "#9ca3af" }}>{player.position}</span>
-                    </div>
-                  </div>
+            <div className="players-list">
+              {isFetchingPlayers ? skeletonPlayers : (
+                recentPlayers.length > 0 ? (
+                  recentPlayers.map((player, i) => (
+                    <div key={i} className="player-item">
+                      <div className="player-info">
+                        <div className="player-avatar">
+                      {player.photoUrl ? (
+                        <img src={player.photoUrl} alt={player.name} />
+                      ) : (
+                        player.name.split(' ').map(n => n[0]).join('')
+                      )}
+                          <p>{player.name}</p>
+                          <span className="player-position">{player.position}</span>
+                        </div>
+                      </div>
 
-                  <span
-                    style={{
-                      fontSize: "0.875rem",
-                      padding: "4px 12px",
-                      borderRadius: "9999px",
-                      fontWeight: 500,
-                      background: player.status === "Available"
-                        ? "rgba(34, 197, 94, 0.2)"
-                        : player.status === "Injured"
-                        ? "rgba(239, 68, 68, 0.2)"
-                        : "rgba(245, 158, 11, 0.2)",
-                      color: player.status === "Available"
-                        ? "#22c55e"
-                        : player.status === "Injured"
-                        ? "#ef4444"
-                        : "#f59e0b",
-                      border: player.status === "Available"
-                        ? "1px solid rgba(34, 197, 94, 0.3)"
-                        : player.status === "Injured"
-                        ? "1px solid rgba(239, 68, 68, 0.3)"
-                        : "1px solid rgba(245, 158, 11, 0.3)"
-                    }}
-                  >
-                    {player.status}
-                  </span>
-                </div>
-              ))}
+                      <span
+                        className={`player-status ${player.status.toLowerCase()}`}
+                      >
+                        {player.status}
+                      </span>
+                    </div>
+                  ))
+                ) : (
+                  <div className="no-data">No player data is available right now.</div>
+                )
+              )}
             </div>
           </div>
 
           {/* QUICK ACTIONS */}
-          <div style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))",
-            gap: "24px"
-          }}>
+          <div className="quick-actions">
             <button
               onClick={() => setShowAddPlayer(true)}
-              style={{
-                background: "#b5f033",
-                color: "#000",
-                padding: "24px",
-                borderRadius: "16px",
-                fontWeight: 600,
-                border: "none",
-                cursor: "pointer",
-                fontSize: "1.125rem",
-                transition: "opacity 0.2s"
-              }}
+              className="action-btn"
             >
               Add Player
             </button>
 
-            <button style={{
-              background: "#eff6ff",
-              border: "1px solid #dbeafe",
-              padding: "24px",
-              borderRadius: "16px",
-              cursor: "pointer",
-              fontSize: "1.125rem",
-              fontWeight: 500,
-              color: "#0f172a",
-              transition: "background 0.2s"
-            }}>
+            <button className="action-btn secondary">
               View Analytics
             </button>
 
             <button
               onClick={() => setActiveTab('messages')}
-              style={{
-                background: "#1f2a22",
-                border: "1px solid #4b5563",
-                padding: "24px",
-                borderRadius: "16px",
-                cursor: "pointer",
-                fontSize: "1.125rem",
-                fontWeight: 500,
-                color: "#fff",
-                transition: "background 0.2s"
-              }}
+              className="action-btn secondary"
             >
               Open Messages
             </button>
@@ -306,94 +274,52 @@ export default function ProfessionalDashboard() {
 
       {/* ADD PLAYER MODAL */}
       {showAddPlayer && (
-        <div style={{
-          position: "fixed",
-          top: 0,
-          left: 0,
-          right: 0,
-          bottom: 0,
-          background: "rgba(0,0,0,0.5)",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          zIndex: 1000
-        }}>
-          <div style={{
-            background: "#ffffff",
-            border: "1px solid rgba(37,99,235,0.2)",
-            borderRadius: "16px",
-            padding: "24px",
-            width: "100%",
-            maxWidth: "400px"
-          }}>
-            <h3 style={{ color: "#2563eb", marginBottom: "20px" }}>Add New Player</h3>
+        <div className="modal-overlay">
+          <div className="modal-content">
+            <h3 className="modal-title">Add New Player</h3>
 
             <form onSubmit={handleAddPlayer}>
-              <div style={{ marginBottom: "16px" }}>
-                <label style={{ display: "block", color: "#f5f5f0", marginBottom: "8px" }}>Name</label>
+              <div className="form-group">
+                <label className="form-label">Name</label>
                 <input
                   type="text"
                   value={newPlayer.name}
                   onChange={(e) => setNewPlayer(prev => ({ ...prev, name: e.target.value }))}
                   required
-                  style={{
-                    width: "100%",
-                    padding: "8px 12px",
-                    background: "rgba(255,255,255,0.04)",
-                    border: "1px solid rgba(255,255,255,0.1)",
-                    borderRadius: "8px",
-                    color: "#f5f5f0"
-                  }}
+                  placeholder="Enter player name"
+                  className="form-input"
                 />
               </div>
 
-              <div style={{ marginBottom: "16px" }}>
-                <label style={{ display: "block", color: "#f5f5f0", marginBottom: "8px" }}>Position</label>
+              <div className="form-group">
+                <label className="form-label">Position</label>
                 <input
                   type="text"
                   value={newPlayer.position}
                   onChange={(e) => setNewPlayer(prev => ({ ...prev, position: e.target.value }))}
-                  style={{
-                    width: "100%",
-                    padding: "8px 12px",
-                    background: "rgba(255,255,255,0.04)",
-                    border: "1px solid rgba(255,255,255,0.1)",
-                    borderRadius: "8px",
-                    color: "#f5f5f0"
-                  }}
+                  placeholder="Enter player position"
+                  className="form-input"
                 />
               </div>
 
-              <div style={{ marginBottom: "16px" }}>
-                <label style={{ display: "block", color: "#f5f5f0", marginBottom: "8px" }}>Age</label>
+              <div className="form-group">
+                <label className="form-label">Age</label>
                 <input
                   type="number"
                   value={newPlayer.age || ''}
                   onChange={(e) => setNewPlayer(prev => ({ ...prev, age: parseInt(e.target.value) || 0 }))}
-                  style={{
-                    width: "100%",
-                    padding: "8px 12px",
-                    background: "rgba(255,255,255,0.04)",
-                    border: "1px solid rgba(255,255,255,0.1)",
-                    borderRadius: "8px",
-                    color: "#f5f5f0"
-                  }}
+                  placeholder="Enter player age"
+                  className="form-input"
                 />
               </div>
 
-              <div style={{ marginBottom: "20px" }}>
-                <label style={{ display: "block", color: "#f5f5f0", marginBottom: "8px" }}>Status</label>
+              <div className="form-group">
+                <label className="form-label">Status</label>
                 <select
                   value={newPlayer.status}
-                  onChange={(e) => setNewPlayer(prev => ({ ...prev, status: e.target.value as any }))}
-                  style={{
-                    width: "100%",
-                    padding: "8px 12px",
-                    background: "rgba(255,255,255,0.04)",
-                    border: "1px solid rgba(255,255,255,0.1)",
-                    borderRadius: "8px",
-                    color: "#f5f5f0"
-                  }}
+                  onChange={(e) => setNewPlayer(prev => ({ ...prev, status: e.target.value as 'Available' | 'Injured' | 'Absent' }))}
+                  title="Select player status"
+                  className="form-select"
                 >
                   <option value="Available">Available</option>
                   <option value="Injured">Injured</option>
@@ -401,35 +327,30 @@ export default function ProfessionalDashboard() {
                 </select>
               </div>
 
-              <div style={{ display: "flex", gap: "12px" }}>
+              <div className="form-group">
+                <label className="form-label">Photo</label>
+                <input
+                  type="file"
+                  accept="image/*"
+                  title="Choose a player photo"
+                  onChange={(e) => handlePhotoChange(e.target.files?.[0] ?? null)}
+                  className="form-input"
+                />
+                {photoPreview && <img src={photoPreview} alt="Preview" className="photo-preview" />}
+              </div>
+
+              <div className="modal-actions">
                 <button
                   type="button"
                   onClick={() => setShowAddPlayer(false)}
-                  style={{
-                    flex: 1,
-                    padding: "10px",
-                    background: "#374151",
-                    border: "none",
-                    borderRadius: "8px",
-                    color: "#f5f5f0",
-                    cursor: "pointer"
-                  }}
+                  className="btn-cancel"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
                   disabled={isLoading}
-                  style={{
-                    flex: 1,
-                    padding: "10px",
-                    background: "#b5f033",
-                    border: "none",
-                    borderRadius: "8px",
-                    color: "#000",
-                    cursor: isLoading ? "not-allowed" : "pointer",
-                    opacity: isLoading ? 0.7 : 1
-                  }}
+                  className="btn-submit"
                 >
                   {isLoading ? 'Adding...' : 'Add Player'}
                 </button>

@@ -246,7 +246,6 @@ export const formatAvailabilityWithDate = (status: string, date?: Date): string 
 // Generate mock dates for announcements
 export const generateAnnouncementDates = (): Date[] => {
   const dates: Date[] = [];
-  const now = new Date();
   const recentActivity = getRecentActivityDates();
   
   // Generate 3-5 announcement dates in the past week

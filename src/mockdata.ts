@@ -1,5 +1,4 @@
 import { User, Team, Tactics, Announcement, DirectMessage, DMThread, MatchWeekHandover, PlayerAvailability, QuickPromptTemplate, UserRole, Formation, PositionZone, MessageStatus, QuickPromptKey } from './schema';
-import { ROLES_METADATA } from './rolesmetadata';
 
 // Mock Users
 export const MOCK_USERS: User[] = [
@@ -316,7 +315,7 @@ export const MOCK_HANDOVER: MatchWeekHandover = {
     'Set pieces: zonal marking, #6 anchors far post',
     'If leading, drop to 4-4-2 shape from 70 mins'
   ],
-  status: 'published' as any,
+  status: 'published',
   is_locked: false,
   published_at: '2025-04-22T10:00:00Z',
   created_by: 'user-001',

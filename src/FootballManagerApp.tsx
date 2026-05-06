@@ -1,5 +1,6 @@
 import { useState } from "react";
 import ProfessionalDashboard from "./components/ProfessionalDashboard";
+import "./FootballManagerApp.css";
 
 const COLORS = {
   dark: "#0e1a12",
@@ -209,70 +210,69 @@ interface LoginScreenProps {
 // Component definitions
 function Field({ label, required, hint, children }: FieldProps) {
   return (
-    <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
-      <label style={{ fontSize: "0.72rem", fontWeight: 600, textTransform: "uppercase", letterSpacing: "1px", color: COLORS.muted }}>
+    <div className="fma-field">
+      <label className="fma-field-label">
         {label}
-        {required && <span style={{ display: "inline-block", width: 5, height: 5, background: COLORS.lime, borderRadius: "50%", marginLeft: 5, verticalAlign: "middle", marginBottom: 2 }} />}
+        {required && <span className="fma-field-required" />}
       </label>
       {children}
-      {hint && <span style={{ fontSize: "0.68rem", color: COLORS.muted }}>{hint}</span>}
+      {hint && <span className="fma-field-hint">{hint}</span>}
     </div>
   );
 }
 
 function SectionCard({ tag, title, children }: SectionCardProps) {
   return (
-    <div style={{ background: COLORS.card, border: `1px solid ${COLORS.border}`, borderRadius: 16, padding: 32, marginBottom: 20, position: "relative", overflow: "hidden" }}>
-      <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 3, background: `linear-gradient(90deg, ${COLORS.lime}, transparent)` }} />
-      {tag && <div style={{ fontFamily: "'Space Mono', monospace", fontSize: "0.6rem", textTransform: "uppercase", letterSpacing: 3, color: COLORS.lime, marginBottom: 4 }}>{tag}</div>}
-      {title && <div style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: "1.55rem", letterSpacing: 1, marginBottom: 24, color: COLORS.white }}>{title}</div>}
+    <div className="fma-section-card">
+      {tag && <div className="fma-section-tag">{tag}</div>}
+      {title && <div className="fma-section-title">{title}</div>}
       {children}
     </div>
   );
 }
 
 function Grid({ cols = 2, children }: GridProps) {
-  const templateCols = cols === 3 ? "1fr 1fr 1fr" : "1fr 1fr";
+  const gridClass = cols === 3 ? "fma-grid-3" : "fma-grid-2";
   return (
-    <div style={{ display: "grid", gridTemplateColumns: templateCols, gap: 14 }}>
+    <div className={gridClass}>
       {children}
     </div>
   );
 }
 
 function Span2({ children }: Span2Props) {
-  return <div style={{ gridColumn: "span 2" }}>{children}</div>;
+  return <div className="fma-span-2">{children}</div>;
 }
 
 function Span3({ children }: Span3Props) {
-  return <div style={{ gridColumn: "span 3" }}>{children}</div>;
+  return <div className="fma-span-3">{children}</div>;
 }
 
 function Divider() {
-  return <div style={{ height: 1, background: COLORS.border, margin: "22px 0" }} />;
+  return <div className="fma-divider" />;
 }
 
 function Callout({ children }: CalloutProps) {
   return (
-    <div style={{ background: "rgba(181,240,51,0.06)", borderLeft: `3px solid ${COLORS.lime}`, borderRadius: "0 8px 8px 0", padding: "13px 16px", marginBottom: 22, fontSize: "0.82rem", color: COLORS.muted, lineHeight: 1.6 }}>
+    <div className="fma-callout">
       {children}
     </div>
   );
 }
 
 function MonoTag({ children }: MonoTagProps) {
-  return <div style={{ fontFamily: "'Space Mono', monospace", fontSize: "0.6rem", textTransform: "uppercase", letterSpacing: 3, color: COLORS.lime, marginBottom: 8 }}>{children}</div>;
+  return <div className="fma-mono-tag">{children}</div>;
 }
 
 function DayPills({ selected, onChange }: DayPillsProps) {
   const days = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
   return (
-    <div style={{ display: "flex", flexWrap: "wrap", gap: 7 }}>
+    <div className="fma-day-pills">
       {days.map(d => {
         const on = selected.includes(d);
         return (
           <button key={d} onClick={() => onChange(on ? selected.filter(x => x !== d) : [...selected, d])}
-            style={{ padding: "6px 13px", borderRadius: 20, border: `1px solid ${on ? COLORS.lime : "rgba(255,255,255,0.1)"}`, background: on ? "rgba(181,240,51,0.15)" : "transparent", color: on ? COLORS.lime : COLORS.muted, fontSize: "0.77rem", cursor: "pointer", transition: "all 0.15s" }}>
+            className={`fma-day-pill ${on ? 'active' : ''}` }>
             {d}
           </button>
         );
@@ -393,13 +393,13 @@ function TeamStep({ data, setData }: TeamStepProps) {
 function PlayerCard({ player, index }: PlayerCardProps) {
   const complete = player.firstName && player.position && player.dob;
   return (
-    <div style={{ display: "flex", alignItems: "center", gap: 13, background: "rgba(255,255,255,0.03)", border: `1px solid ${COLORS.border}`, borderRadius: 10, padding: "13px 16px", marginBottom: 9 }}>
-      <div style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: "1.35rem", color: COLORS.lime, minWidth: 28, textAlign: "center" }}>{player.shirtNumber || index + 1}</div>
-      <div style={{ flex: 1 }}>
-        <div style={{ fontWeight: 600, fontSize: "0.88rem" }}>{player.firstName} {player.lastName}</div>
-        <div style={{ fontFamily: "'Space Mono', monospace", fontSize: "0.58rem", color: COLORS.muted, textTransform: "uppercase", letterSpacing: 1 }}>{player.position || "Position TBC"} · #{player.shirtNumber || "?"}</div>
+    <div className="fma-player-card">
+      <div className="fma-player-shirt">{player.shirtNumber || index + 1}</div>
+      <div className="fma-player-info">
+        <div className="fma-player-name">{player.firstName} {player.lastName}</div>
+        <div className="fma-player-details">{player.position || "Position TBC"} · #{player.shirtNumber || "?"}</div>
       </div>
-      <span style={{ padding: "3px 10px", borderRadius: 20, fontFamily: "'Space Mono', monospace", fontSize: "0.58rem", textTransform: "uppercase", letterSpacing: 1, background: complete ? "rgba(181,240,51,0.15)" : "rgba(232,53,53,0.15)", color: complete ? COLORS.lime : COLORS.red }}>
+      <span className={`fma-player-badge ${complete ? 'complete' : 'incomplete'}`}>
         {complete ? "Ready" : "Incomplete"}
       </span>
     </div>
@@ -411,10 +411,10 @@ const emptyPlayer = (): Player => ({ firstName: "", lastName: "", shirtNumber: "
 function PlayerForm({ player, onChange, onSave, onCancel }: PlayerFormProps) {
   const u = (f: keyof Player, v: string | string[]) => onChange({ ...player, [f]: v });
   return (
-    <div style={{ background: "rgba(255,255,255,0.02)", border: `1px solid ${COLORS.border}`, borderRadius: 12, padding: 22, marginBottom: 14 }}>
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 18 }}>
-        <div style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: "1.15rem", color: COLORS.lime, letterSpacing: 1 }}>+ New Player</div>
-        <button onClick={onCancel} style={{ background: "none", border: "none", color: COLORS.muted, cursor: "pointer", fontSize: "1.1rem" }}>×</button>
+    <div className="fma-player-form">
+      <div className="fma-player-form-header">
+        <div className="fma-player-form-title">+ New Player</div>
+        <button onClick={onCancel} className="fma-player-form-close">×</button>
       </div>
 
       <Grid cols={3}>
@@ -464,7 +464,7 @@ function PlayerForm({ player, onChange, onSave, onCancel }: PlayerFormProps) {
         <Span3><MonoTag>Availability</MonoTag></Span3>
         <Span3>
           <Field label="Available Days">
-            <div style={{ marginTop: 6 }}>
+            <div className="fma-day-pills-container">
               <DayPills selected={player.availability} onChange={v => u("availability", v)} />
             </div>
           </Field>
@@ -473,11 +473,11 @@ function PlayerForm({ player, onChange, onSave, onCancel }: PlayerFormProps) {
         <Span3><Field label="Additional Notes"><textarea value={player.notes} onChange={e => u("notes", e.target.value)} placeholder="e.g. Can only play mornings..." /></Field></Span3>
       </Grid>
 
-      <div style={{ display: "flex", gap: 10, marginTop: 18 }}>
-        <button onClick={onSave} style={{ padding: "11px 26px", background: COLORS.lime, color: COLORS.dark, border: "none", borderRadius: 8, fontFamily: "'Bebas Neue', sans-serif", fontSize: "1rem", letterSpacing: 2, cursor: "pointer" }}>
+      <div className="fma-button-group">
+        <button onClick={onSave} className="fma-button-primary">
           ADD PLAYER
         </button>
-        <button onClick={onCancel} style={{ padding: "11px 20px", background: "transparent", color: COLORS.muted, border: "1px solid rgba(255,255,255,0.1)", borderRadius: 8, fontFamily: "'Space Mono', monospace", fontSize: "0.68rem", letterSpacing: 1, cursor: "pointer", textTransform: "uppercase" }}>
+        <button onClick={onCancel} className="fma-button-secondary">
           Cancel
         </button>
       </div>
@@ -582,7 +582,7 @@ function AppointSuccessorModal({ isOpen, onClose, onSuccessorAppointed, currentM
       
       onSuccessorAppointed(selectedSuccessor.id);
       onClose();
-    } catch (error) {
+    } catch {
       setAppointmentError('Failed to appoint successor');
     } finally {
       setIsAppointing(false);
@@ -590,116 +590,37 @@ function AppointSuccessorModal({ isOpen, onClose, onSuccessorAppointed, currentM
   };
 
   return (
-    <div style={{
-      position: 'fixed',
-      inset: 0,
-      background: 'rgba(0, 0, 0, 0.8)',
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-      zIndex: 1000,
-      padding: 20
-    }}>
-      <div style={{
-        background: COLORS.card,
-        border: `2px solid ${COLORS.lime}`,
-        borderRadius: 16,
-        padding: 32,
-        maxWidth: 600,
-        width: '100%',
-        maxHeight: '80vh',
-        overflowY: 'auto',
-        position: 'relative'
-      }}>
-        <div style={{
-          position: 'absolute',
-          top: 0,
-          left: 0,
-          right: 0,
-          height: 4,
-          background: COLORS.lime
-        }} />
+    <div className="fma-modal-overlay lime">
+      <div className="fma-modal-content">
         
-        <div style={{
-          fontFamily: '"Bebas Neue", sans-serif',
-          fontSize: '2rem',
-          color: COLORS.lime,
-          letterSpacing: 2,
-          marginBottom: 16,
-          textAlign: 'center'
-        }}>
+        <div className="fma-modal-title">
           👥 APPOINT SUCCESSOR
         </div>
 
-        <div style={{
-          background: 'rgba(181, 240, 51, 0.1)',
-          border: `1px solid ${COLORS.lime}`,
-          borderRadius: 8,
-          padding: 16,
-          marginBottom: 24
-        }}>
-          <p style={{
-            color: COLORS.lime,
-            fontWeight: 600,
-            marginBottom: 8,
-            textAlign: 'center'
-          }}>
+        <div className="fma-modal-info">
+          <p>
             Before you retire, you must appoint a successor.
           </p>
-          <p style={{
-            color: COLORS.muted,
-            fontSize: '0.88rem',
-            lineHeight: 1.5,
-            textAlign: 'center'
-          }}>
+          <p>
             Search for a team member to take over as manager.
           </p>
         </div>
 
-        <div style={{ marginBottom: 24 }}>
-          <label style={{
-            display: 'block',
-            fontSize: '0.72rem',
-            fontWeight: 600,
-            textTransform: 'uppercase',
-            letterSpacing: '1px',
-            color: COLORS.muted,
-            marginBottom: 8
-          }}>
+        <div className="fma-modal-section">
+          <label className="fma-modal-label">
             Search by name, username, or email
           </label>
-          <div style={{ display: 'flex', gap: 10 }}>
+          <div className="fma-modal-search-group">
             <input
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Enter search terms..."
-              style={{
-                flex: 1,
-                background: 'rgba(255,255,255,0.04)',
-                border: '1px solid rgba(255,255,255,0.1)',
-                borderRadius: 8,
-                padding: '11px 13px',
-                color: COLORS.white,
-                fontFamily: '"DM Sans", sans-serif',
-                fontSize: '0.88rem',
-                outline: 'none'
-              }}
+              className="fma-modal-input fma-modal-search-input"
             />
             <button
               onClick={handleSearch}
-              style={{
-                padding: '11px 20px',
-                background: COLORS.lime,
-                color: COLORS.dark,
-                border: 'none',
-                borderRadius: 8,
-                fontFamily: '"Space Mono", monospace',
-                fontSize: '0.7rem',
-                letterSpacing: 1,
-                cursor: 'pointer',
-                textTransform: 'uppercase'
-              }}
+              className="fma-modal-search-btn"
             >
               Search
             </button>
@@ -707,51 +628,26 @@ function AppointSuccessorModal({ isOpen, onClose, onSuccessorAppointed, currentM
         </div>
 
         {searchResults.length > 0 && (
-          <div style={{ marginBottom: 24 }}>
-            <div style={{
-              fontSize: '0.72rem',
-              fontWeight: 600,
-              textTransform: 'uppercase',
-              letterSpacing: '1px',
-              color: COLORS.muted,
-              marginBottom: 12
-            }}>
-              Search Results
-            </div>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+          <div className="fma-search-results">
+            <div className="fma-search-results-title">Search Results</div>
+            <div className="fma-search-results-list">
               {searchResults.map(user => (
                 <div
                   key={user.id}
                   onClick={() => setSelectedSuccessor(user)}
-                  style={{
-                    background: selectedSuccessor?.id === user.id ? 'rgba(181, 240, 51, 0.15)' : 'rgba(255,255,255,0.03)',
-                    border: `1px solid ${selectedSuccessor?.id === user.id ? COLORS.lime : 'rgba(255,255,255,0.1)'}`,
-                    borderRadius: 8,
-                    padding: '12px 16px',
-                    cursor: 'pointer',
-                    transition: 'all 0.2s'
-                  }}
+                  className={`fma-search-result-item ${selectedSuccessor?.id === user.id ? 'selected' : ''}`}
                 >
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <div className="fma-search-result-header">
                     <div>
-                      <div style={{ fontWeight: 600, fontSize: '0.88rem' }}>
+                      <div className="fma-search-result-name">
                         {user.firstName} {user.lastName}
                       </div>
-                      <div style={{ fontFamily: '"Space Mono", monospace', fontSize: '0.58rem', color: COLORS.muted, textTransform: 'uppercase', letterSpacing: 1 }}>
+                      <div className="fma-search-result-meta">
                         @{user.username} · {user.role} · {user.email}
                       </div>
                     </div>
                     {selectedSuccessor?.id === user.id && (
-                      <div style={{
-                        padding: '4px 8px',
-                        borderRadius: 12,
-                        background: COLORS.lime,
-                        color: COLORS.dark,
-                        fontFamily: '"Space Mono", monospace',
-                        fontSize: '0.58rem',
-                        textTransform: 'uppercase',
-                        letterSpacing: 1
-                      }}>
+                      <div className="fma-search-result-badge">
                         Selected
                       </div>
                     )}
@@ -763,56 +659,23 @@ function AppointSuccessorModal({ isOpen, onClose, onSuccessorAppointed, currentM
         )}
 
         {appointmentError && (
-          <div style={{
-            background: 'rgba(232, 53, 53, 0.15)',
-            borderLeft: `3px solid ${COLORS.red}`,
-            borderRadius: '0 8px 8px 0',
-            padding: '13px 16px',
-            marginBottom: 24,
-            fontSize: '0.82rem',
-            color: COLORS.red,
-            lineHeight: 1.6
-          }}>
+          <div className="fma-error-box">
             {appointmentError}
           </div>
         )}
 
-        <div style={{ display: 'flex', gap: 10 }}>
+        <div className="fma-modal-buttons">
           <button
             onClick={handleAppoint}
             disabled={!selectedSuccessor || isAppointing}
-            style={{
-              flex: 1,
-              padding: '12px 20px',
-              background: selectedSuccessor && !isAppointing ? COLORS.lime : 'rgba(181, 240, 51, 0.3)',
-              color: COLORS.dark,
-              border: 'none',
-              borderRadius: 8,
-              fontFamily: '"Space Mono", monospace',
-              fontSize: '0.7rem',
-              letterSpacing: 1,
-              cursor: selectedSuccessor && !isAppointing ? 'pointer' : 'not-allowed',
-              textTransform: 'uppercase',
-              opacity: (selectedSuccessor && !isAppointing) ? 1 : 0.5
-            }}
+            className="fma-modal-button"
           >
             {isAppointing ? 'Appointing...' : 'Appoint as Manager'}
           </button>
           <button
             onClick={onClose}
             disabled={isAppointing}
-            style={{
-              padding: '12px 20px',
-              background: 'transparent',
-              color: COLORS.muted,
-              border: '1px solid rgba(255,255,255,0.1)',
-              borderRadius: 8,
-              fontFamily: '"Space Mono", monospace',
-              fontSize: '0.7rem',
-              letterSpacing: 1,
-              cursor: isAppointing ? 'not-allowed' : 'pointer',
-              textTransform: 'uppercase'
-            }}
+            className="fma-modal-button secondary"
           >
             Cancel
           </button>
@@ -824,122 +687,50 @@ function AppointSuccessorModal({ isOpen, onClose, onSuccessorAppointed, currentM
 
 function LoginScreen({ message }: LoginScreenProps) {
   return (
-    <div className="football-app" style={{ background: COLORS.dark, minHeight: "100vh", fontFamily: "'DM Sans', sans-serif", color: COLORS.white, display: "flex", alignItems: "center", justifyContent: "center", padding: 32 }}>
+    <div className="fma-login-screen">
       <style>{globalStyle}</style>
-      <div style={{ textAlign: "center", maxWidth: 400 }}>
-        <div style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: "4rem", color: COLORS.lime, letterSpacing: 4, marginBottom: 24 }}>
-          Kick<span style={{ color: COLORS.white }}>off</span>
+      <div className="fma-login-container">
+        <div className="fma-login-logo">
+          Kick<span className="fma-login-logo-white">off</span>
         </div>
         
         {message && (
-          <div style={{
-            background: 'rgba(181, 240, 51, 0.1)',
-            border: `1px solid ${COLORS.lime}`,
-            borderRadius: 8,
-            padding: 16,
-            marginBottom: 32
-          }}>
-            <p style={{
-              color: COLORS.lime,
-              fontWeight: 600,
-              fontSize: '0.88rem',
-              lineHeight: 1.5
-            }}>
+          <div className="fma-login-message">
+            <p>
               {message}
             </p>
           </div>
         )}
 
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 16, marginBottom: 32 }}>
-          <div>
-            <label style={{
-              display: 'block',
-              fontSize: '0.72rem',
-              fontWeight: 600,
-              textTransform: 'uppercase',
-              letterSpacing: '1px',
-              color: COLORS.muted,
-              marginBottom: 8
-            }}>
+        <div className="fma-login-form-group">
+          <div className="fma-login-field">
+            <label className="fma-login-label">
               Username
             </label>
             <input
               type="text"
               placeholder="Enter username"
-              style={{
-                background: 'rgba(255,255,255,0.04)',
-                border: '1px solid rgba(255,255,255,0.1)',
-                borderRadius: 8,
-                padding: '11px 13px',
-                color: COLORS.white,
-                fontFamily: '"DM Sans", sans-serif',
-                fontSize: '0.88rem',
-                width: '100%',
-                outline: 'none'
-              }}
+              className="fma-login-input"
             />
           </div>
           
-          <div>
-            <label style={{
-              display: 'block',
-              fontSize: '0.72rem',
-              fontWeight: 600,
-              textTransform: 'uppercase',
-              letterSpacing: '1px',
-              color: COLORS.muted,
-              marginBottom: 8
-            }}>
+          <div className="fma-login-field">
+            <label className="fma-login-label">
               Password
             </label>
             <input
               type="password"
               placeholder="Enter password"
-              style={{
-                background: 'rgba(255,255,255,0.04)',
-                border: '1px solid rgba(255,255,255,0.1)',
-                borderRadius: 8,
-                padding: '11px 13px',
-                color: COLORS.white,
-                fontFamily: '"DM Sans", sans-serif',
-                fontSize: '0.88rem',
-                width: '100%',
-                outline: 'none'
-              }}
+              className="fma-login-input"
             />
           </div>
         </div>
 
-        <button style={{
-          width: '100%',
-          padding: '13px 20px',
-          background: COLORS.lime,
-          color: COLORS.dark,
-          border: 'none',
-          borderRadius: 8,
-          fontFamily: '"Bebas Neue", sans-serif',
-          fontSize: '1.05rem',
-          letterSpacing: 2,
-          cursor: 'pointer',
-          textTransform: 'uppercase',
-          marginBottom: 16
-        }}>
+        <button className="fma-login-button">
           Login
         </button>
 
-        <button style={{
-          width: '100%',
-          padding: '13px 20px',
-          background: 'transparent',
-          color: COLORS.muted,
-          border: '1px solid rgba(255,255,255,0.1)',
-          borderRadius: 8,
-          fontFamily: '"Space Mono", monospace',
-          fontSize: '0.7rem',
-          letterSpacing: 1,
-          cursor: 'pointer',
-          textTransform: 'uppercase'
-        }}>
+        <button className="fma-login-button secondary">
           Create New Account
         </button>
       </div>
@@ -968,82 +759,22 @@ function RetireModal({ isOpen, onClose, onRetire, isManager, hasSuccessor, onApp
   const canRetire = !isManager || hasSuccessor;
 
   return (
-    <div style={{
-      position: 'fixed',
-      inset: 0,
-      background: 'rgba(0, 0, 0, 0.8)',
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-      zIndex: 1000,
-      padding: 20
-    }}>
-      <div style={{
-        background: COLORS.card,
-        border: `2px solid ${COLORS.red}`,
-        borderRadius: 16,
-        padding: 32,
-        maxWidth: 500,
-        width: '100%',
-        position: 'relative'
-      }}>
-        <div style={{
-          position: 'absolute',
-          top: 0,
-          left: 0,
-          right: 0,
-          height: 4,
-          background: COLORS.red
-        }} />
-        
-        <div style={{
-          fontFamily: '"Bebas Neue", sans-serif',
-          fontSize: '2rem',
-          color: COLORS.red,
-          letterSpacing: 2,
-          marginBottom: 16,
-          textAlign: 'center'
-        }}>
+    <div className="fma-modal-overlay red">
+      <div className="fma-modal-content">
+        <div className="fma-retire-modal-title">
           ⚠️ DANGER ZONE
         </div>
 
-        <div style={{
-          background: 'rgba(232, 53, 53, 0.1)',
-          border: `1px solid ${COLORS.red}`,
-          borderRadius: 8,
-          padding: 16,
-          marginBottom: 24
-        }}>
-          <p style={{
-            color: COLORS.red,
-            fontWeight: 600,
-            marginBottom: 8,
-            textAlign: 'center'
-          }}>
-            This action is PERMANENT and cannot be undone.
-          </p>
-          <p style={{
-            color: COLORS.muted,
-            fontSize: '0.88rem',
-            lineHeight: 1.5,
-            textAlign: 'center'
-          }}>
+        <div className="fma-retire-modal-warning">
+          <p>This action is PERMANENT and cannot be undone.</p>
+          <p>
             All your data will be permanently deleted including:
             Direct Messages, Heatmap Data, and Team Assignments.
           </p>
         </div>
 
         {!canRetire && (
-          <div style={{
-            background: 'rgba(232, 53, 53, 0.15)',
-            borderLeft: `3px solid ${COLORS.red}`,
-            borderRadius: '0 8px 8px 0',
-            padding: '13px 16px',
-            marginBottom: 24,
-            fontSize: '0.82rem',
-            color: COLORS.red,
-            lineHeight: 1.6
-          }}>
+          <div className="fma-retire-modal-notice">
             You must appoint a successor before retiring.
           </div>
         )}
@@ -1051,35 +782,14 @@ function RetireModal({ isOpen, onClose, onRetire, isManager, hasSuccessor, onApp
         {!canRetire && (
           <button
             onClick={onAppointSuccessor}
-            style={{
-              width: '100%',
-              padding: '12px 20px',
-              background: COLORS.lime,
-              color: COLORS.dark,
-              border: 'none',
-              borderRadius: 8,
-              fontFamily: '"Space Mono", monospace',
-              fontSize: '0.7rem',
-              letterSpacing: 1,
-              cursor: 'pointer',
-              textTransform: 'uppercase',
-              marginBottom: 24
-            }}
+            className="fma-retire-modal-button appoint"
           >
             Appoint Successor First
           </button>
         )}
 
-        <div style={{ marginBottom: 24 }}>
-          <label style={{
-            display: 'block',
-            fontSize: '0.72rem',
-            fontWeight: 600,
-            textTransform: 'uppercase',
-            letterSpacing: '1px',
-            color: COLORS.muted,
-            marginBottom: 8
-          }}>
+        <div className="fma-modal-section">
+          <label className="fma-modal-label">
             Type RETIRE to confirm
           </label>
           <input
@@ -1087,56 +797,22 @@ function RetireModal({ isOpen, onClose, onRetire, isManager, hasSuccessor, onApp
             value={confirmation}
             onChange={(e) => setConfirmation(e.target.value)}
             placeholder="Type RETIRE"
-            style={{
-              background: 'rgba(255,255,255,0.04)',
-              border: `1px solid ${confirmation === 'RETIRE' ? COLORS.red : 'rgba(255,255,255,0.1)'}`,
-              borderRadius: 8,
-              padding: '11px 13px',
-              color: COLORS.white,
-              fontFamily: '"DM Sans", sans-serif',
-              fontSize: '0.88rem',
-              width: '100%',
-              outline: 'none'
-            }}
+            className={`fma-retire-modal-input ${confirmation === 'RETIRE' ? 'retire-confirm' : ''}`}
           />
         </div>
 
-        <div style={{ display: 'flex', gap: 10 }}>
+        <div className="fma-retire-modal-buttons">
           <button
             onClick={handleRetire}
             disabled={confirmation !== 'RETIRE' || !canRetire || isRetiring}
-            style={{
-              flex: 1,
-              padding: '12px 20px',
-              background: confirmation === 'RETIRE' && canRetire && !isRetiring ? COLORS.red : 'rgba(232, 53, 53, 0.3)',
-              color: COLORS.white,
-              border: 'none',
-              borderRadius: 8,
-              fontFamily: '"Space Mono", monospace',
-              fontSize: '0.7rem',
-              letterSpacing: 1,
-              cursor: confirmation === 'RETIRE' && canRetire && !isRetiring ? 'pointer' : 'not-allowed',
-              textTransform: 'uppercase',
-              opacity: (confirmation === 'RETIRE' && canRetire && !isRetiring) ? 1 : 0.5
-            }}
+            className="fma-retire-modal-button retire"
           >
             {isRetiring ? 'Retiring...' : 'Permanently Delete Account'}
           </button>
           <button
             onClick={onClose}
             disabled={isRetiring}
-            style={{
-              padding: '12px 20px',
-              background: 'transparent',
-              color: COLORS.muted,
-              border: '1px solid rgba(255,255,255,0.1)',
-              borderRadius: 8,
-              fontFamily: '"Space Mono", monospace',
-              fontSize: '0.7rem',
-              letterSpacing: 1,
-              cursor: isRetiring ? 'not-allowed' : 'pointer',
-              textTransform: 'uppercase'
-            }}
+            className="fma-retire-modal-button cancel"
           >
             Cancel
           </button>
@@ -1166,7 +842,7 @@ function PlayersStep({ players, setPlayers }: PlayersStepProps) {
       {formOpen
         ? <PlayerForm player={draft} onChange={setDraft} onSave={handleSave} onCancel={() => setFormOpen(false)} />
         : (
-          <button onClick={() => setFormOpen(true)} style={{ width: "100%", padding: 13, border: `2px dashed rgba(181,240,51,0.3)`, borderRadius: 10, background: "transparent", color: COLORS.lime, fontFamily: "'Space Mono', monospace", fontSize: "0.72rem", textTransform: "uppercase", letterSpacing: 2, cursor: "pointer", transition: "all 0.2s" }}>
+          <button onClick={() => setFormOpen(true)} className="fma-add-player-button">
             + Add Player
           </button>
         )
@@ -1186,7 +862,6 @@ export default function FootballManagerApp() {
   const [showLoginScreen, setShowLoginScreen] = useState(false);
   const [loginMessage, setLoginMessage] = useState('');
   const [hasSuccessor, setHasSuccessor] = useState(false);
-  const [successorId, setSuccessorId] = useState('');
   const [showDashboard, setShowDashboard] = useState(false);
 
   const [managerData, setManagerData] = useState<ManagerData>({ firstName: "", lastName: "", email: "", phone: "", dob: "", gender: "", username: "", password: "", confirmPassword: "", emergencyName: "", emergencyPhone: "", experience: "", formation: "", certs: "" });
@@ -1220,7 +895,7 @@ export default function FootballManagerApp() {
       setLoginMessage('Your career has ended. All data has been removed.');
       setShowLoginScreen(true);
       setRetireModalOpen(false);
-    } catch (error) {
+    } catch {
       setRetirementError('An unexpected error occurred');
     }
   };
@@ -1230,8 +905,7 @@ export default function FootballManagerApp() {
     setAppointSuccessorModalOpen(true);
   };
 
-  const handleSuccessorAppointed = (newSuccessorId: string) => {
-    setSuccessorId(newSuccessorId);
+  const handleSuccessorAppointed = () => {
     setHasSuccessor(true);
     setAppointSuccessorModalOpen(false);
     
@@ -1239,14 +913,6 @@ export default function FootballManagerApp() {
     setTimeout(() => {
       setRetireModalOpen(true);
     }, 500);
-  };
-
-  const handleRetireClick = () => {
-    if (isManager && !hasSuccessor) {
-      setRetireModalOpen(true);
-    } else {
-      setRetireModalOpen(true);
-    }
   };
 
   if (showDashboard) {
@@ -1259,17 +925,17 @@ export default function FootballManagerApp() {
 
   if (submitted) {
     return (
-      <div className="football-app" style={{ background: COLORS.dark, minHeight: "100vh", fontFamily: "'DM Sans', sans-serif", color: COLORS.white, display: "flex", alignItems: "center", justifyContent: "center", padding: 32 }}>
+      <div className="fma-submitted-screen">
         <style>{globalStyle}</style>
-        <div style={{ textAlign: "center" }}>
-          <div style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: "5rem", color: COLORS.lime, letterSpacing: 4 }}> </div>
-          <div style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: "3rem", letterSpacing: 3, marginBottom: 12 }}>REGISTRATION <span style={{ color: COLORS.lime }}>SUBMITTED!</span></div>
-          <p style={{ color: COLORS.muted, marginBottom: 28, maxWidth: 400 }}>Your team <strong style={{ color: COLORS.white }}>{teamData.teamName || "your club"}</strong> has been registered. The league admin will be in touch shortly.</p>
-          <div style={{ fontFamily: "'Space Mono', monospace", fontSize: "0.7rem", color: COLORS.lime, letterSpacing: 2, background: "rgba(181,240,51,0.08)", padding: "8px 20px", borderRadius: 20, display: "inline-block" }}>
+        <div className="fma-submitted-content">
+          <div className="fma-submitted-logo"> </div>
+          <div className="fma-submitted-title">REGISTRATION <span>SUBMITTED!</span></div>
+          <p className="fma-submitted-description">Your team <strong>{teamData.teamName || "your club"}</strong> has been registered. The league admin will be in touch shortly.</p>
+          <div className="fma-submitted-badge">
             {players.length} player{players.length !== 1 ? "s" : ""} registered · {teamData.division || "Division TBC"}
           </div>
           <br /><br />
-          <button onClick={() => setSubmitted(false)} style={{ padding: "12px 28px", background: "transparent", color: COLORS.muted, border: "1px solid rgba(255,255,255,0.1)", borderRadius: 8, fontFamily: "'Space Mono', monospace", fontSize: "0.7rem", letterSpacing: 1, cursor: "pointer", textTransform: "uppercase" }}>
+          <button onClick={() => setSubmitted(false)} className="fma-submitted-button">
             Edit Registration
           </button>
         </div>
@@ -1367,18 +1033,7 @@ export default function FootballManagerApp() {
       />
 
       {retirementError && (
-        <div style={{
-          position: 'fixed',
-          bottom: 20,
-          right: 20,
-          background: 'rgba(232, 53, 53, 0.9)',
-          color: COLORS.white,
-          padding: '12px 16px',
-          borderRadius: 8,
-          fontFamily: '"DM Sans", sans-serif',
-          fontSize: '0.88rem',
-          zIndex: 1001
-        }}>
+        <div className="fma-retirement-error">
           {retirementError}
         </div>
       )}

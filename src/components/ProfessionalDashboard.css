@@ -1,0 +1,500 @@
+/* ProfessionalDashboard.css */
+
+.dashboard-container {
+  min-height: 100vh;
+  background: #eff6ff;
+  color: #0f172a;
+}
+
+.header {
+  background: #dbeafe;
+  border-bottom: 4px solid #93c5fd;
+  padding: 16px 24px;
+}
+
+.header-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.header-title h1 {
+  font-size: 1.875rem;
+  font-weight: bold;
+  margin: 0;
+}
+
+.header-title p {
+  color: #475569;
+  margin: 4px 0 0 0;
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.user-info {
+  text-align: right;
+}
+
+.user-name {
+  font-weight: 600;
+}
+
+.user-role {
+  font-size: 0.875rem;
+  color: #d1d5db;
+}
+
+.logout-btn {
+  padding: 8px 16px;
+  background: #eff6ff;
+  border: 1px solid rgba(37, 99, 235, 0.2);
+  border-radius: 12px;
+  color: #0f172a;
+  cursor: pointer;
+  font-size: 0.875rem;
+  transition: background 0.2s;
+}
+
+.avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: #2563eb;
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+}
+
+.navigation {
+  background: #ffffff;
+  padding: 12px 24px;
+  border-bottom: 1px solid #dbeafe;
+}
+
+.nav-tabs {
+  display: flex;
+  gap: 8px;
+}
+
+.nav-btn {
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-weight: 500;
+  background: #eff6ff;
+  color: #475569;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.nav-btn.active {
+  background: #2563eb;
+  color: #ffffff;
+}
+
+.main-content {
+  padding: 32px 24px;
+}
+
+.content-wrapper {
+  max-width: 1024px;
+  margin: 0 auto;
+}
+
+.availability-card {
+  background: #ffffff;
+  border: 1px solid #dbeafe;
+  border-radius: 16px;
+  padding: 24px;
+  margin-bottom: 32px;
+}
+
+.score-card {
+  background: #ffffff;
+  border: 1px solid #dbeafe;
+  border-radius: 16px;
+  padding: 24px;
+  margin-bottom: 32px;
+}
+
+.score-card-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.status-pill {
+  padding: 8px 14px;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+.status-pill.online {
+  background: rgba(34, 197, 94, 0.15);
+  color: #16a34a;
+}
+
+.status-pill.offline {
+  background: rgba(248, 113, 113, 0.15);
+  color: #dc2626;
+}
+
+.score-body {
+  display: grid;
+  gap: 12px;
+  margin-bottom: 18px;
+}
+
+.score-body.empty {
+  color: #475569;
+  font-size: 0.95rem;
+}
+
+.score-numbers {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  font-size: 2rem;
+  font-weight: 700;
+  color: #2563eb;
+}
+
+.photo-preview {
+  width: 100%;
+  max-width: 200px;
+  display: block;
+  margin-top: 12px;
+  border-radius: 14px;
+  object-fit: cover;
+}
+
+.availability-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-bottom: 16px;
+  color: #2563eb;
+}
+
+.availability-rate {
+  font-size: 2.25rem;
+  font-weight: bold;
+  color: #2563eb;
+}
+
+.availability-desc {
+  color: #64748b;
+  margin-top: 8px;
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 24px;
+  margin-bottom: 32px;
+}
+
+.stat-card {
+  background: #ffffff;
+  border: 1px solid #dbeafe;
+  border-radius: 16px;
+  padding: 24px;
+  transition: border-color 0.2s;
+}
+
+.stat-title {
+  color: #9ca3af;
+  font-size: 0.875rem;
+  font-weight: 500;
+  margin-bottom: 8px;
+}
+
+.stat-value {
+  font-size: 1.875rem;
+  font-weight: bold;
+  color: #2563eb;
+  margin: 0;
+}
+
+.players-card {
+  background: #ffffff;
+  border: 1px solid #dbeafe;
+  border-radius: 16px;
+  padding: 24px;
+  margin-bottom: 32px;
+}
+
+.players-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-bottom: 24px;
+  color: #2563eb;
+}
+
+.players-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.offline-banner {
+  background: #fee2e2;
+  color: #b91c1c;
+  padding: 12px 24px;
+  text-align: center;
+  font-weight: 600;
+}
+
+.skeleton-card,
+.skeleton-player {
+  position: relative;
+  overflow: hidden;
+  background: #eff6ff;
+}
+
+.skeleton-card::after,
+.skeleton-player::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.7), transparent);
+  animation: shimmer 1.5s infinite;
+}
+
+.skeleton-line {
+  display: block;
+  height: 14px;
+  border-radius: 999px;
+  background: #e2e8f0;
+  margin-bottom: 10px;
+}
+
+.skeleton-line.short {
+  width: 40%;
+}
+
+.skeleton-line.long {
+  width: 85%;
+}
+
+.skeleton-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: #e2e8f0;
+}
+
+.skeleton-pill {
+  width: 80px;
+  height: 24px;
+  border-radius: 999px;
+  background: #e2e8f0;
+}
+
+@keyframes shimmer {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+
+.player-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px;
+  background: #eff6ff;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.player-info {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.player-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: #2563eb;
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  overflow: hidden;
+}
+
+.player-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.player-details p {
+  font-weight: 500;
+  margin: 0;
+}
+
+.player-position {
+  font-size: 0.875rem;
+  color: #9ca3af;
+}
+
+.player-status {
+  font-size: 0.875rem;
+  padding: 4px 12px;
+  border-radius: 9999px;
+  font-weight: 500;
+}
+
+.player-status.available {
+  background: rgba(34, 197, 94, 0.2);
+  color: #22c55e;
+  border: 1px solid rgba(34, 197, 94, 0.3);
+}
+
+.player-status.injured {
+  background: rgba(239, 68, 68, 0.2);
+  color: #ef4444;
+  border: 1px solid rgba(239, 68, 68, 0.3);
+}
+
+.player-status.absent {
+  background: rgba(245, 158, 11, 0.2);
+  color: #f59e0b;
+  border: 1px solid rgba(245, 158, 11, 0.3);
+}
+
+.no-data {
+  padding: 24px;
+  border-radius: 14px;
+  background: #f8fafc;
+  color: #475569;
+  text-align: center;
+  font-size: 0.95rem;
+}
+
+.quick-actions {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 24px;
+}
+
+.action-btn {
+  background: #2563eb;
+  color: #ffffff;
+  padding: 24px;
+  border-radius: 16px;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  font-size: 1.125rem;
+  transition: opacity 0.2s;
+}
+
+.action-btn.secondary {
+  background: #eff6ff;
+  border: 1px solid #dbeafe;
+  color: #0f172a;
+  font-weight: 500;
+  transition: background 0.2s;
+}
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(15, 23, 42, 0.12);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  background: #ffffff;
+  border: 1px solid rgba(37, 99, 235, 0.2);
+  border-radius: 16px;
+  padding: 24px;
+  width: 100%;
+  max-width: 400px;
+}
+
+.modal-title {
+  color: #2563eb;
+  margin-bottom: 20px;
+}
+
+.form-group {
+  margin-bottom: 16px;
+}
+
+.form-label {
+  display: block;
+  color: #0f172a;
+  margin-bottom: 8px;
+}
+
+.form-input {
+  width: 100%;
+  padding: 8px 12px;
+  background: #f8fbff;
+  border: 1px solid #d4e2f0;
+  border-radius: 10px;
+  color: #0f172a;
+}
+
+.form-select {
+  width: 100%;
+  padding: 8px 12px;
+  background: #f8fbff;
+  border: 1px solid #d4e2f0;
+  border-radius: 10px;
+  color: #0f172a;
+}
+
+.modal-actions {
+  display: flex;
+  gap: 12px;
+}
+
+.btn-cancel {
+  flex: 1;
+  padding: 10px;
+  background: #e2e8f0;
+  border: none;
+  border-radius: 12px;
+  color: #0f172a;
+  cursor: pointer;
+}
+
+.btn-submit {
+  flex: 1;
+  padding: 10px;
+  background: #2563eb;
+  border: none;
+  border-radius: 10px;
+  color: #ffffff;
+  cursor: pointer;
+}
+
+.btn-submit:disabled {
+  cursor: not-allowed;
+  opacity: 0.7;
+}

@@ -1,3 +1,6 @@
+# Football-app
+A casual app where users can be coaches and players and pick among themselves, register thier team and book matches with other registered teams, plan formations and the likes with the tools available
+
 # Football Management App
 
 A comprehensive football team management application with modern UI, real-time analytics, and secure authentication.
@@ -89,6 +92,7 @@ npm run dev
 4. Open [http://localhost:5173](http://localhost:5173) in your browser
 
 ## API Documentation
+
 
 ### Authentication Endpoints
 - `POST /api/register` - Register new user
@@ -235,3 +239,4 @@ npm run build
 ## License
 
 This project is licensed under the MIT License.
+

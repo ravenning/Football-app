@@ -1,0 +1,16 @@
+{
+  "name": "Football Manager",
+  "short_name": "Football",
+  "start_url": ".",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#2563eb",
+  "description": "Manage players, messages, and team data with progressive offline support.",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "type": "image/svg+xml",
+      "sizes": "any"
+    }
+  ]
+}

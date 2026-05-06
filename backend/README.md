@@ -51,6 +51,17 @@ All player routes require JWT token in Authorization header:
 Authorization: <jwt_token>
 ```
 
+### Demo Player Account
+For quick access, the backend seeds a demo player account on startup if it does not already exist:
+- Email: `demo.player@example.com`
+- Password: `Player123!`
+
+You can override these values in `.env` with:
+```
+DEMO_PLAYER_EMAIL=demo.player@example.com
+DEMO_PLAYER_PASSWORD=Player123!
+```
+
 ## Data Models
 
 ### User
